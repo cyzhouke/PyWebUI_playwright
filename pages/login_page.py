@@ -4,8 +4,7 @@
 登录页面对象
 """
 from pages.base_page import BasePage
-from config.config import test_web_url
-from config.config import test_web_url, TEST_USERNAME, TEST_PASSWORD, TEST_COOD
+from config.config import *
 
 
 class LoginPage(BasePage):
@@ -24,7 +23,7 @@ class LoginPage(BasePage):
 
     def load(self):
         """加载登录页面"""
-        self.navigate(test_web_url)
+        self.navigate(nn_web_url)
 
 
 

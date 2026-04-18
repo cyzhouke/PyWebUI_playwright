@@ -10,9 +10,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent.parent
 
 # WEB端域名
-pre_nn_url = "http://www.nn.com"
-test_nn_url = "http://test-www.nn.com"
-test_web_url = "https://test-web.nn.com/home"
+nn_web_url = "https://test-web.nn.com/home"
 
 # 测试账号
 TEST_USERNAME = "15927443395"
@@ -23,6 +21,7 @@ TEST_COOD = "8888"
 HEADLESS = False                    # 是否无头模式
 SLOW_MO = 500                       # 操作延迟，毫秒
 ARGS = ["--start-maximized"]        # 最大化浏览器窗口
+VIEWPORT = {"width": 1920, "height": 1080}  # 浏览器窗口大小
 
 # 截图配置
 SCREENSHOT_DIR = BASE_DIR / "screenshots"

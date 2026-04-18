@@ -5,7 +5,7 @@ pytest配置文件 - fixture定义
 """
 import pytest
 from playwright.sync_api import sync_playwright
-from config.config import HEADLESS, SLOW_MO, ARGS, TEST_USERNAME, TEST_PASSWORD
+from config.config import HEADLESS, SLOW_MO, ARGS, TEST_USERNAME, TEST_PASSWORD, VIEWPORT
 from utils.logger import logger
 from utils.screenshot import take_screenshot
 
@@ -30,7 +30,7 @@ def browser():
 def page(browser):
     """页面fixture - 每个测试函数使用新页面"""
     logger.info("创建新页面...")
-    page = browser.new_page()
+    page = browser.new_page(no_viewport=True)
     yield page
     logger.info("关闭页面...")
     page.close()
@@ -43,8 +43,8 @@ def logged_in_page(browser):
     page = browser.new_page()
 
     # 导航到登录页面
-    from config.config import SAUCE_DEMO_URL
-    page.goto(SAUCE_DEMO_URL)
+    from config.config import nn_web_url
+    page.goto(nn_web_url)
 
     # 执行登录
     page.fill("#user-name", TEST_USERNAME)
