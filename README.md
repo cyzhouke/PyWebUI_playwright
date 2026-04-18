@@ -6,7 +6,7 @@
 ## 一、理解项目结构
 
 ```
-playwright_pytest_framework/
+PyWebUI_playwright/
 ├── conftest.py              # 🎯 最核心的文件！pytest配置和fixture
 ├── pytest.ini               # pytest配置文件
 ├── requirements.txt         # 依赖包列表
@@ -40,4 +40,4 @@ playwright_pytest_framework/
 
 ### pages/login_page.py（登录页面）
 
-### 4. tests/test_login.py（测试用例）
+### tests/test_login.py（测试用例）

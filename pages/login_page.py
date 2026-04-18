@@ -4,30 +4,44 @@
 登录页面对象
 """
 from pages.base_page import BasePage
-from config.config import pre_nn_url, test_nn_url, TEST_USERNAME, TEST_PASSWORD
+from config.config import test_web_url
+from config.config import test_web_url, TEST_USERNAME, TEST_PASSWORD, TEST_COOD
 
 
 class LoginPage(BasePage):
     """登录页面"""
 
+    # 元素定位器 (role, name) - 配合 BasePage.get_by_role() 使用
+    # AVATAR = ("img", "默认头像")
+    # PHONE_INPUT = ("textbox", "请输入手机号")
+    # VERIFY_CODE = ("textbox", "请输入验证码")
+    # LOGIN_BUTTON = ("button", "登录 / 注册")
+    AVATAR = 'img[alt="默认头像"]'
+    PHONE_INPUT = 'input[placeholder="请输入手机号"]'
+    VERIFY_CODE = 'input[placeholder="请输入验证码"]'
+    LOGIN_BUTTON = 'button:has-text("登录 / 注册")'
+    LOGIN_SUCCESS_BODY = "body"
+
     def load(self):
         """加载登录页面"""
-        self.navigate(url=test_nn_url)
+        self.navigate(test_web_url)
 
-    def login(self):
+
+
+    def login(self,username=TEST_USERNAME,password=TEST_COOD):
         """执行登录操作"""
-        self.fill()
-        self.fill()
-        self.click()
+        self.click(self.AVATAR)
+        self.fill(self.PHONE_INPUT,username)
+        self.fill(self.VERIFY_CODE,password)
+        self.click(self.LOGIN_BUTTON)
 
-    def get_error_message(self):
-        """获取错误提示信息"""
-        pass
+    def wait_for_login_success(self, timeout=10000):
+        """等待登录成功"""
+        self.wait_for_selector(self.LOGIN_SUCCESS_BODY, timeout=timeout)
 
-    # def is_login_successful(self) -> bool:
-    #     """判断登录是否成功"""
-    #     try:
-    #         self.wait_for_selector(".inventory_list", timeout=5000)
-    #         return True
-    #     except:
-    #         return False
+    def is_login_successful(self):
+        try:
+            self.wait_for_selector(".inventory_list", timeout=5000)
+            return True
+        except:
+            pass

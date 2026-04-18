@@ -5,7 +5,7 @@ pytest配置文件 - fixture定义
 """
 import pytest
 from playwright.sync_api import sync_playwright
-from config.config import HEADLESS, SLOW_MO, TEST_USERNAME, TEST_PASSWORD
+from config.config import HEADLESS, SLOW_MO, ARGS, TEST_USERNAME, TEST_PASSWORD
 from utils.logger import logger
 from utils.screenshot import take_screenshot
 
@@ -17,7 +17,8 @@ def browser():
     playwright = sync_playwright().start()
     browser = playwright.chromium.launch(
         headless=HEADLESS,
-        slow_mo=SLOW_MO
+        slow_mo=SLOW_MO,
+        args= ARGS
     )
     yield browser
     logger.info("关闭浏览器...")
