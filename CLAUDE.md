@@ -28,9 +28,48 @@ pytest -m smoke
 ## 代码架构
 
 ### 页面对象模型结构
-- `pages/base_page.py` - 页面基类，包含通用 UI 操作（navigate、fill、click、wait_for_selector、get_text、is_visible、screenshot）
+- `pages/base_page.py` - 页面基类，封装通用 UI 操作
 - `pages/login_page.py` - 登录页面类，继承 BasePage 并定义页面特定操作
 - `tests/` - 测试类命名规范：`Test*`，测试方法命名规范：`test_*`
+
+### BasePage 定位方法
+
+#### CSS/XPath 选择器（灵活但脆弱）
+```python
+self.fill("#username", "admin")        # 填写
+self.click(".login-btn")                # 点击
+self.wait_for_selector("#modal")       # 等待
+```
+
+#### Playwright 语义化定位（推荐，稳定）
+```python
+# get_by_role - 通过 ARIA role 定位
+self.click_by_role("button", name="登录")
+self.fill_by_role("textbox", name="请输入手机号", value="15927443395")
+
+# get_by_label - 通过 label 文本定位
+self.fill_by_label("用户名", value="admin")
+
+# get_by_placeholder - 通过占位符定位
+self.fill_by_placeholder("请输入验证码", value="8888")
+
+# get_by_text - 通过文本内容定位
+self.click_by_text("提交")
+
+# get_by_test_id - 通过测试ID定位（最稳定，需开发配合）
+self.click_by_test_id("login-submit-btn")
+
+# get_by_title - 通过 title 属性定位
+self.click_by_title("关闭")
+```
+
+### LoginPage 元素定位器定义
+```python
+AVATAR = 'img[alt="默认头像"]'                    # CSS 属性选择器
+PHONE_INPUT = 'input[placeholder="请输入手机号"]'  # CSS 属性选择器
+VERIFY_CODE = 'input[placeholder="请输入验证码"]'  # CSS 属性选择器
+LOGIN_BUTTON = 'button:has-text("登录 / 注册")'    # CSS 伪类选择器
+```
 
 ### pytest Fixtures（conftest.py）
 - `browser` - Session 级别，整个测试会话共用一个浏览器实例
