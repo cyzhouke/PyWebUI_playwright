@@ -5,10 +5,15 @@
 """
 import logging
 import sys
+import io
 from pathlib import Path
 from datetime import datetime
 
 from config.config import BASE_DIR
+
+# Windows 下设置 stdout 编码为 UTF-8
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def setup_logger(level=logging.INFO):
     """

@@ -8,6 +8,7 @@ from playwright.sync_api import sync_playwright
 from config.config import HEADLESS, SLOW_MO, ARGS, TEST_USERNAME, TEST_PASSWORD, VIEWPORT
 from utils.logger import logger
 from utils.screenshot import take_screenshot
+from utils.wechat_notifier import send_report
 
 
 @pytest.fixture(scope="session")
@@ -60,25 +61,64 @@ def logged_in_page(browser):
     page.close()
 
 
+# 会话级别的测试结果存储
+_test_results = {"passed": 0, "failed": 0, "skipped": 0}
+
+
+def pytest_sessionstart(session):
+    """会话开始时初始化结果存储"""
+    session.test_results = _test_results
+
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """测试失败时自动截图"""
+    """测试失败时自动截图，并收集测试结果"""
     outcome = yield
     report = outcome.get_result()
 
-    if report.when == "call" and report.failed:
-        # 检查是否有page fixture
-        if "page" in item.funcargs:
-            page = item.funcargs["page"]
-            try:
-                logger.error(f"测试失败: {item.name}，正在截图...")
-                take_screenshot(page, f"failure_{item.name}")
-            except Exception as e:
-                logger.error(f"截图失败: {e}")
-        elif "logged_in_page" in item.funcargs:
-            page = item.funcargs["logged_in_page"]
-            try:
-                logger.error(f"测试失败: {item.name}，正在截图...")
-                take_screenshot(page, f"failure_{item.name}")
-            except Exception as e:
-                logger.error(f"截图失败: {e}")
+    # 在 call 阶段收集测试结果
+    if report.when == "call":
+        if report.passed:
+            item.session.test_results["passed"] += 1
+        elif report.failed:
+            item.session.test_results["failed"] += 1
+            # 截图逻辑
+            if "page" in item.funcargs:
+                page = item.funcargs["page"]
+                try:
+                    logger.error(f"测试失败: {item.name}，正在截图...")
+                    take_screenshot(page, f"failure_{item.name}")
+                except Exception as e:
+                    logger.error(f"截图失败: {e}")
+            elif "logged_in_page" in item.funcargs:
+                page = item.funcargs["logged_in_page"]
+                try:
+                    logger.error(f"测试失败: {item.name}，正在截图...")
+                    take_screenshot(page, f"failure_{item.name}")
+                except Exception as e:
+                    logger.error(f"截图失败: {e}")
+        elif report.skipped:
+            item.session.test_results["skipped"] += 1
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """测试会话结束后发送企业微信通知"""
+    from config.config import WECHAT_NOTIFY_ON_SUCCESS, WECHAT_NOTIFY_ON_FAILURE
+
+    has_failures = exitstatus != 0
+
+    if has_failures and not WECHAT_NOTIFY_ON_FAILURE:
+        return
+    if not has_failures and not WECHAT_NOTIFY_ON_SUCCESS:
+        return
+
+    results = getattr(session, 'test_results', _test_results)
+    passed = results["passed"]
+    failed = results["failed"]
+    skipped = results["skipped"]
+
+    logger.info(f"发送测试报告到企业微信: 通过={passed}, 失败={failed}, 跳过={skipped}")
+    try:
+        send_report(passed, failed, skipped, 0)
+    except Exception as e:
+        logger.error(f"发送企业微信通知失败: {e}")

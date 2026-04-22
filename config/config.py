@@ -29,3 +29,8 @@ SCREENSHOT_ON_FAILURE = True
 
 # 报告配置
 REPORT_DIR = BASE_DIR / "reports"
+
+# 企业微信通知
+WECHAT_WEBHOOK_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fadd3dc5-ba49-40e3-a730-a2371e25ac6e"
+WECHAT_NOTIFY_ON_SUCCESS = True   # 测试成功时也发送通知
+WECHAT_NOTIFY_ON_FAILURE = True   # 测试失败时发送通知
