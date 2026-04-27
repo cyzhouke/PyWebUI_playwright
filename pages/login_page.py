@@ -25,8 +25,6 @@ class LoginPage(BasePage):
         """加载登录页面"""
         self.navigate(nn_web_url)
 
-
-
     def login(self,username=TEST_USERNAME,password=TEST_COOD):
         """执行登录操作"""
         self.click(self.AVATAR)

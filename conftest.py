@@ -9,6 +9,7 @@ from config.config import HEADLESS, SLOW_MO, ARGS, TEST_USERNAME, TEST_PASSWORD,
 from utils.logger import logger
 from utils.screenshot import take_screenshot
 from utils.wechat_notifier import send_report
+from pages.login_page import LoginPage
 
 
 @pytest.fixture(scope="session")
@@ -35,6 +36,16 @@ def page(browser):
     yield page
     logger.info("关闭页面...")
     page.close()
+
+
+@pytest.fixture(scope="function")
+def login_page(page):
+    """登录页面fixture - 已加载但未登录"""
+    logger.info("加载登录页面...")
+    login_page = LoginPage(page)
+    login_page.load()
+    page.wait_for_load_state("load")
+    yield login_page
 
 
 @pytest.fixture(scope="function")

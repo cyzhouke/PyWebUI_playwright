@@ -82,9 +82,17 @@ LOGIN_BUTTON = 'button:has-text("登录 / 注册")'    # CSS 伪类选择器
 ### 工具模块
 - `utils/logger.py` - 日志工具，同时输出到控制台和 `logs/` 目录下的日志文件
 - `utils/screenshot.py` - 截图工具，调用 Playwright 的 screenshot 方法
+- `utils/wechat_notifier.py` - 企业微信群机器人通知模块，测试完成后自动发送报告
+
+### 企业微信通知
+
+- 测试执行完成后自动发送测试报告到企业微信群
+- 支持配置：`WECHAT_NOTIFY_ON_SUCCESS`（成功时发送）、`WECHAT_NOTIFY_ON_FAILURE`（失败时发送）
+- 通知内容包含：执行时间、通过数、失败数、通过率、总耗时等
 
 ### 配置文件
-- `config/config.py` - URL、账号密码、浏览器配置（HEADLESS、SLOW_MO）、路径配置（SCREENSHOT_DIR、REPORT_DIR）
+
+- `config/config.py` - URL、账号密码、浏览器配置（HEADLESS、SLOW_MO）、路径配置（SCREENSHOT_DIR、REPORT_DIR）、企业微信 Webhook URL
 - `pytest.ini` - pytest 配置，指定测试路径、测试类/方法命名规则、标记（smoke、regression）、HTML 报告输出
 
 ## 测试执行流程

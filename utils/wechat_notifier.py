@@ -59,7 +59,7 @@ class WeChatNotifier:
         total = passed + failed + skipped
         pass_rate = (passed / total * 100) if total > 0 else 0
 
-        content = f"""**自动化测试持续集成完成提醒**
+        content = f"""**UI自动化测试持续集成完成提醒**
 
 > 执行时间：{self._get_timestamp()}
 
@@ -68,7 +68,7 @@ class WeChatNotifier:
 - 所在团队：NN
 - 所在项目：PyWebUI
 - 所在分支/版本：main
-- 运行环境：测试环境
+- 运行环境：WEB-测试环境
 - 运行于：CLI
 
 **执行结果**

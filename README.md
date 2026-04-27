@@ -28,7 +28,8 @@ PyWebUI_playwright/
 │   └── test_login.py          # 登录测试用例
 ├── utils/
 │   ├── logger.py              # 日志工具
-│   └── screenshot.py          # 截图工具
+│   ├── screenshot.py          # 截图工具
+│   └── wechat_notifier.py     # 企业微信通知模块
 ├── conftest.py                # pytest 配置和 fixtures
 ├── pytest.ini                 # pytest 配置文件
 ├── requirements.txt           # 依赖包列表
